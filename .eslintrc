@@ -1,0 +1,22 @@
+{
+    // parse TypeScript files
+    // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/parser
+    "parser": "@typescript-eslint/parser",
+    // configure eslint using options described at
+    // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin
+    "plugins": ["@typescript-eslint"],
+    "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "eslint:recommended"
+    ],
+    "env": {
+        "browser": true,
+        "node": true
+    },     
+    "rules": {
+      "no-var": "error",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-constant-condition": "off"
+    }
+}
