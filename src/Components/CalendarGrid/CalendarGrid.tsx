@@ -14,11 +14,11 @@ export default function CalendarGrid({ startDay }: {startDay: moment.Moment}) {
     return (
         <div style={gridCalendarStyle}>
             {daysOnPage.map((day, i, arr) => (
-                <div key={i} style={itemDayStyle}>
+                <CellWrapper key={i} isWeekend={daysService.isWeekend(day)}>
                     <RowInCell>
                         <div style={dayWrapper}>{day.format('D')}</div>
                     </RowInCell>
-                </div>
+                </CellWrapper>
             ))}
         </div>
     );
@@ -34,7 +34,17 @@ export default function CalendarGrid({ startDay }: {startDay: moment.Moment}) {
 
 const RowInCell = styled.div<{ justifyContent?: string }>`
     display: flex;    
-    justify-content: ${(props) => props.justifyContent ? props.justifyContent : 'flex-start'};
+    justify-content: ${(props) => props.justifyContent ? props.justifyContent : 'flex-end'};
+`;
+
+const CellWrapper = styled.div<{ isWeekend?: boolean }>`
+    // padding: '12px',
+    // margin: '12px',
+    min-width: 120px;
+    min-height: 75px;
+    text-align: center;
+    background-color: ${(props) => props.isWeekend ? 'rgb(178, 227, 247)' : 'skyblue'};
+    text-align: center;
 `;
 
 const dayWrapper: CSSProperties = {
@@ -53,12 +63,3 @@ const gridCalendarStyle: CSSProperties = {
     rowGap: '1px',
 };
 
-// Cell style.
-const itemDayStyle: CSSProperties = {
-    // padding: '12px',
-    // margin: '12px',
-    backgroundColor: 'skyblue',
-    textAlign: 'center',
-    minWidth: '120px',
-    minHeight: '75px',
-};

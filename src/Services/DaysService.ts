@@ -11,6 +11,7 @@ export class DaysService {
     }
 
     public maxDaysOnPage = 41;
+    public numbersOfWeekends = [6, 0];
 
     public getStartMonthDay = () => {
         const startDay = moment().startOf('month').startOf('week');
@@ -20,6 +21,11 @@ export class DaysService {
     public getEndMonthDay = () => {
         const endDay = moment().endOf('month').endOf('week');
         return endDay;
+    };
+
+    public isWeekend = (day: moment.Moment) => {        
+        const dayNumber = day.day();
+        return this.numbersOfWeekends.includes(dayNumber);
     };
 
     // Get the range of days.
