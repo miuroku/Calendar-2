@@ -28,6 +28,14 @@ export class DaysService {
         return this.numbersOfWeekends.includes(dayNumber);
     };
 
+    public getCurrentDay = () => {
+        return moment();
+    }
+
+    public isCurrentDay = (day: moment.Moment) => {
+        return day.isSame(this.getCurrentDay(), 'day');
+    }
+
     // Get the range of days.
     public getMonthPageDays = () => {
         const startDay = this.getStartMonthDay();

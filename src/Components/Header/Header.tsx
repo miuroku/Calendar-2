@@ -1,7 +1,11 @@
-import React from 'react'
+import React from 'react';
+import styled from 'styled-components';
 
 export default function Header() {
-  return (
-    <div>Header</div>
-  )
+    return <DivWrapper></DivWrapper>;
 }
+
+const DivWrapper = styled('div')`
+    background-color: #2a2b2d;
+    height: 36px;
+`;

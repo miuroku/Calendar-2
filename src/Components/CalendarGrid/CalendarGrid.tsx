@@ -3,20 +3,30 @@ import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
 import { DaysService } from '../../Services/DaysService';
 
-export default function CalendarGrid({ startDay }: {startDay: moment.Moment}) {
-    
+export default function CalendarGrid({
+    startDay,
+}: {
+    startDay: moment.Moment;
+}) {
     const daysService = new DaysService();
 
     const day = startDay.clone();
     //const daysOnPage = [...Array(maxAmountOfDaysOnPage)];
-    const daysOnPage = daysService.getMonthPageDays();    
+    const daysOnPage = daysService.getMonthPageDays();
 
     return (
         <div style={gridCalendarStyle}>
             {daysOnPage.map((day, i, arr) => (
                 <CellWrapper key={i} isWeekend={daysService.isWeekend(day)}>
                     <RowInCell>
-                        <div style={dayWrapper}>{day.format('D')}</div>
+                        <DayWrapper>
+                            {
+                                daysService.isCurrentDay(day) ?
+                                    <CurrentDay><div>{day.format('D')}</div></CurrentDay>
+                                    :
+                                    <div>{day.format('D')}</div>
+                            }
+                        </DayWrapper>
                     </RowInCell>
                 </CellWrapper>
             ))}
@@ -33,8 +43,9 @@ export default function CalendarGrid({ startDay }: {startDay: moment.Moment}) {
 // Question: why could i define styles below the function that use them ?
 
 const RowInCell = styled.div<{ justifyContent?: string }>`
-    display: flex;    
-    justify-content: ${(props) => props.justifyContent ? props.justifyContent : 'flex-end'};
+    display: flex;
+    justify-content: ${(props) =>
+        props.justifyContent ? props.justifyContent : 'flex-end'};
 `;
 
 const CellWrapper = styled.div<{ isWeekend?: boolean }>`
@@ -43,17 +54,20 @@ const CellWrapper = styled.div<{ isWeekend?: boolean }>`
     min-width: 120px;
     min-height: 75px;
     text-align: center;
-    background-color: ${(props) => props.isWeekend ? 'rgb(178, 227, 247)' : 'skyblue'};
+    background-color: ${(props) =>
+        props.isWeekend ? 'rgb(178, 227, 247)' : 'skyblue'};
     text-align: center;
 `;
 
-const dayWrapper: CSSProperties = {
-    display: 'flex',
-    height: '33px',
-    width: '33px',
-    alignItems: 'center', // align-items — controls alignment of all items on the cross axis. (horizontal line)
-    justifyContent: 'center', // justify-content - controls alignment of all items on the main axis. (vertical line)
-};
+const DayWrapper = styled.div`
+    height: 31px;
+    width: 31px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px;
+    cursor: pointer;
+`;
 
 const gridCalendarStyle: CSSProperties = {
     display: 'grid',
@@ -63,3 +77,12 @@ const gridCalendarStyle: CSSProperties = {
     rowGap: '1px',
 };
 
+const CurrentDay = styled('div')`
+    height: 100%;
+    width: 100%;
+    background: #f00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
