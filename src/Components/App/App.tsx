@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import './App.css';
 import Header from '../Header/Header';
 import Monitor from '../Monitor/Monitor';
@@ -9,14 +9,33 @@ import moment from 'moment';
 
 export default function App() {
     const daysService = new DaysService();
-    const today = moment();
-    const startDay = daysService.getStartMonthDay();
+
+    const [today, setToday] = useState(daysService.getCurrentDay());
+
+    //const startDay = daysService.getStartMonthDay();
+
+    const prevHandler = () => {
+        setToday((prev) => prev.clone().subtract(1, 'month'));
+    };
+
+    const todayHandler = () => {
+        setToday(daysService.getCurrentDay());
+    };
+
+    const nextHandler = () => {
+        setToday((prev) => prev.clone().add(1, 'month'));
+    };
 
     return (
         <ShadowWrapper>
             <Header />
-            <Monitor today={today} />
-            <CalendarGrid startDay={startDay} />
+            <Monitor
+                today={today}
+                prevHandler={prevHandler}
+                todayHandler={todayHandler}
+                nextHandler={nextHandler}
+            />
+            <CalendarGrid startDay={today} />
         </ShadowWrapper>
     );
 }

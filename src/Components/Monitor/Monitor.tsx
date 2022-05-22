@@ -2,17 +2,31 @@ import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
 
-export default function Monitor({ today }: { today: moment.Moment }) {
+interface IButtonHandler {
+    (): void;
+}
+
+export default function Monitor({
+    today,
+    prevHandler,
+    todayHandler,
+    nextHandler,
+}: {
+    today: moment.Moment;
+    prevHandler: IButtonHandler;
+    todayHandler: IButtonHandler;
+    nextHandler: IButtonHandler;
+}) {
     return (
         <DivWrapper>
             <div>
-                <TitleWrapper>{ today.format('MMMM') }</TitleWrapper>
-                <TextWrapper>{ today.format('YYYY') }</TextWrapper>
+                <TitleWrapper>{today.format('MMMM')}</TitleWrapper>
+                <TextWrapper>{today.format('YYYY')}</TextWrapper>
             </div>
             <ButtonsWrapper>
-                <ButtonWrapper>&lt;</ButtonWrapper>
-                <TodayButton>today</TodayButton>
-                <ButtonWrapper>&gt;</ButtonWrapper>
+                <ButtonWrapper onClick={prevHandler}>&lt;</ButtonWrapper>
+                <TodayButton onClick={todayHandler}>today</TodayButton>
+                <ButtonWrapper onClick={nextHandler}>&gt;</ButtonWrapper>
             </ButtonsWrapper>
         </DivWrapper>
     );
@@ -36,13 +50,13 @@ const TitleWrapper = styled(TextWrapper)`
 `;
 
 const ButtonWrapper = styled.button`
-    border: unset;
+    //border: unset;
     background-color: #565759;
     height: 20px;
     margin-right: 2px;
     border-radius: 4px;
     color: #e6e6e6;
-    outline: unset;
+    //outline: unset;
     cursor: pointer;
 `;
 

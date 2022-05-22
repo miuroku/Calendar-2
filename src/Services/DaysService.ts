@@ -1,10 +1,8 @@
-import moment from "moment";
+import moment from 'moment';
 
 export class DaysService {
-
-    constructor () {
+    constructor() {
         //window.moment = moment;
-    
         // Updates global object for starting week from 1'st day (Mon) (by deafult it starts from 0 (Sun) cuz of specific of USA).
         // Note: Would be interesting to make specification for different countries.
         // moment.updateLocale('en', { week: { dow: 1 } });
@@ -13,39 +11,43 @@ export class DaysService {
     public maxDaysOnPage = 41;
     public numbersOfWeekends = [6, 0];
 
-    public getStartMonthDay = () => {
-        const startDay = moment().startOf('month').startOf('week');
+    public getStartMonthDay = (forDay = this.getCurrentDay()) => {
+        const startDay = forDay.clone().startOf('month').startOf('week');
         return startDay;
     };
 
-    public getEndMonthDay = () => {
-        const endDay = moment().endOf('month').endOf('week');
+    public getEndMonthDay = (forDay = this.getCurrentDay()) => {
+        const endDay = forDay.clone().endOf('month').endOf('week');
         return endDay;
     };
 
-    public isWeekend = (day: moment.Moment) => {        
+    public isWeekend = (day: moment.Moment) => {
         const dayNumber = day.day();
         return this.numbersOfWeekends.includes(dayNumber);
     };
 
     public getCurrentDay = () => {
         return moment();
-    }
+    };
 
     public isCurrentDay = (day: moment.Moment) => {
         return day.isSame(this.getCurrentDay(), 'day');
-    }
+    };
 
-    // Get the range of days.
-    public getMonthPageDays = () => {
-        const startDay = this.getStartMonthDay();
-        const endDay = this.getEndMonthDay();
+    public getDayAliasByDayNumber = (dayNumber: number) => {
+        return moment().day(dayNumber).format('ddd');
+    };
+
+    // Get the range of days in month for some day.
+    public getMonthPageDays = (forDay = this.getCurrentDay()) => {
+        const startDay = this.getStartMonthDay(forDay);
+        const endDay = this.getEndMonthDay(forDay);
         const days: moment.Moment[] = [startDay.clone()]; // Array to store all moments of Month page.
 
         for (let i = 0; i < this.maxDaysOnPage; i++) {
+            const newDay = startDay.add(1, 'day').clone();
 
-            const newDay = startDay.add(1, 'day').clone();            
-            days.push(newDay);            
+            days.push(newDay);
 
             if (newDay.isSame(endDay, 'day')) {
                 break;

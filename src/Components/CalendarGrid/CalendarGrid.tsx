@@ -10,27 +10,43 @@ export default function CalendarGrid({
 }) {
     const daysService = new DaysService();
 
-    const day = startDay.clone();
-    //const daysOnPage = [...Array(maxAmountOfDaysOnPage)];
-    const daysOnPage = daysService.getMonthPageDays();
+    const daysOnPage = daysService.getMonthPageDays(startDay);
 
     return (
-        <div style={gridCalendarStyle}>
-            {daysOnPage.map((day, i, arr) => (
-                <CellWrapper key={i} isWeekend={daysService.isWeekend(day)}>
-                    <RowInCell>
-                        <DayWrapper>
-                            {
-                                daysService.isCurrentDay(day) ?
-                                    <CurrentDay><div>{day.format('D')}</div></CurrentDay>
-                                    :
+        <>
+            {/* Day aliases*/}
+            <GridWrapper isHeader>
+                {[...Array(7)].map((_, i) => (
+                    <CellWrapper isHeader>
+                        <RowInCell justifyContent={'flex-end'} pr={1}>
+                            {daysService.getDayAliasByDayNumber(i+1)}
+                        </RowInCell>
+                    </CellWrapper>
+                ))}
+            </GridWrapper>
+
+            {/* Grid days*/}
+            <GridWrapper>
+                {daysOnPage.map((day, i, arr) => (
+                    <CellWrapper
+                        key={day.unix()}
+                        isWeekend={daysService.isWeekend(day)}
+                    >
+                        <RowInCell justifyContent={'flex-end'}>
+                            <DayWrapper>
+                                {daysService.isCurrentDay(day) ? (
+                                    <CurrentDay>
+                                        <div>{day.format('D')}</div>
+                                    </CurrentDay>
+                                ) : (
                                     <div>{day.format('D')}</div>
-                            }
-                        </DayWrapper>
-                    </RowInCell>
-                </CellWrapper>
-            ))}
-        </div>
+                                )}
+                            </DayWrapper>
+                        </RowInCell>
+                    </CellWrapper>
+                ))}
+            </GridWrapper>
+        </>
     );
 }
 
@@ -42,17 +58,19 @@ export default function CalendarGrid({
 
 // Question: why could i define styles below the function that use them ?
 
-const RowInCell = styled.div<{ justifyContent?: string }>`
+const RowInCell = styled.div<{ justifyContent?: string, pr?:number }>`
     display: flex;
+    flex-direction: column;
     justify-content: ${(props) =>
-        props.justifyContent ? props.justifyContent : 'flex-end'};
+        props.justifyContent ? props.justifyContent : 'flex-start'};
+    ${props => props.pr && `padding-right: ${props.pr * 8}px`}
 `;
 
-const CellWrapper = styled.div<{ isWeekend?: boolean }>`
+const CellWrapper = styled.div<{ isWeekend?: boolean; isHeader?: boolean }>`
     // padding: '12px',
     // margin: '12px',
-    min-width: 120px;
-    min-height: 75px;
+    min-height: ${(props) => (props.isHeader ? 24 : 80)}px;
+    min-width: 140px;
     text-align: center;
     background-color: ${(props) =>
         props.isWeekend ? 'rgb(178, 227, 247)' : 'skyblue'};
@@ -69,13 +87,15 @@ const DayWrapper = styled.div`
     cursor: pointer;
 `;
 
-const gridCalendarStyle: CSSProperties = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(7, 1fr)',
-    gridTemplateRows: 'repeat(6, 1fr)',
-    columnGap: '1px',
-    rowGap: '1px',
-};
+const GridWrapper = styled.div<{ isHeader?: boolean }>`
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 1px;
+    ${props => !props.isHeader && `min-height: ${`${75 * 7 + 5}px`};`}
+    /* min-height: ${`${75 * 7 + 5}px`}; */
+    background-color: ${(props) => (props.isHeader ? '#1E1F21' : '#4D4C4D')};
+    ${(props) => props.isHeader && `border-bottom: 1px solid #4D4C4D`}
+`;
 
 const CurrentDay = styled('div')`
     height: 100%;
