@@ -46,7 +46,7 @@ export default function CalendarGrid({
             <GridWrapper>
                 {daysOnPage.map((day, i, arr) => (
                     <CellWrapper
-                        key={day.unix()}
+                        key={day.clone().unix()}
                         isWeekend={daysService.isWeekend(day)}
                         isSelectedMonth={daysService.isSelectedMonth(
                             day,
@@ -78,7 +78,11 @@ export default function CalendarGrid({
                                                     .format('X')
                                     )
                                     .map((event) => (
-                                        <li key={event.id}>{event.date}</li>
+                                        <li key={event.id}>
+                                            <EventItemWrapper>
+                                                {event.title}
+                                            </EventItemWrapper>
+                                        </li>
                                     ))}
                                 {/* <div>
                                     E : {day.clone().endOf('day').format('X')}

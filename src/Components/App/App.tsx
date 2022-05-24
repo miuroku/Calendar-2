@@ -9,16 +9,17 @@ import moment from 'moment';
 
 export default function App() {
 
-    const [events, setEvents] = useState([]);
-
     const daysService = new DaysService();
+    
 
-    const [today, setToday] = useState(daysService.getCurrentDay());
+    const [events, setEvents] = useState([]);
+    //const [today, setToday] = useState(daysService.getCurrentDay());
+    const [today, setToday] = useState(moment());
 
     const startDay = today.clone().startOf('month').startOf('week');
-
-    const startDayQuery = daysService.getStartMonthDay(startDay).format('X');
-    const endDayQuery = daysService.getEndMonthDay(startDay).format('X');
+    
+    const startDayQuery = daysService.getStartMonthDay(startDay).format('X');    
+    const endDayQuery = daysService.getEndMonthDay(today).format('X');
 
     useEffect(() => {
         fetch(`${daysService.url}/events?date_gte=${startDayQuery}&date_lte=${endDayQuery}`)
@@ -36,7 +37,8 @@ export default function App() {
     };
 
     const todayHandler = () => {
-        setToday(daysService.getCurrentDay());
+        setToday(daysService.getCurrentDay().clone());
+        //setToday(moment());
     };
 
     const nextHandler = () => {
