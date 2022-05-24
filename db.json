@@ -1,6 +1,60 @@
 {
-    "events": [
-        {"id": 1, "title": "Go to the bed", "description": "some description12", "date":    1654290001},
-        {"id": 2, "title": "Go to the bed 2", "description": "some description34", "date":  1654376401}        
-    ]
+  "events": [
+    {
+      "id": 1,
+      "title": "Go to the bed",
+      "description": "some description12",
+      "date": 1654290001
+    },
+    {
+      "id": 2,
+      "title": "Go to the bed 2",
+      "description": "some description34",
+      "date": 1654376401
+    },
+    {
+      "0": "C",
+      "1": "r",
+      "2": "e",
+      "3": "a",
+      "4": "t",
+      "5": "e",
+      "title": "some",
+      "description": "aomnfd 2",
+      "id": 3
+    },
+    {
+      "0": "C",
+      "1": "r",
+      "2": "e",
+      "3": "a",
+      "4": "t",
+      "5": "e",
+      "title": "qwe",
+      "description": "sdf",
+      "id": 4
+    },
+    {
+      "0": "C",
+      "1": "r",
+      "2": "e",
+      "3": "a",
+      "4": "t",
+      "5": "e",
+      "description": "Аывл",
+      "title": "йцу",
+      "id": 5
+    },
+    {
+      "0": "C",
+      "1": "r",
+      "2": "e",
+      "3": "a",
+      "4": "t",
+      "5": "e",
+      "description": "sndf",
+      "title": "213",
+      "id": 6
+    }
+  ]
 }

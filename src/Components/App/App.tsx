@@ -69,14 +69,13 @@ const ButtonsWrapper = styled('div')`
 const defaultEvent = {
     title: '',
     description: '',
-    date: moment().format('X')
+    date: moment().format('X'),
 };
-  
 
 export default function App() {
     const daysService = new DaysService();
 
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState<any[]>([]);
     const [event, setEvent] = useState(Object.create({}));
     const [isShowForm, setShowForm] = useState(false);
     const [method, setMethod] = useState('');
@@ -133,18 +132,65 @@ export default function App() {
         }));
     };
 
+    const eventFetchHandler = () => {
+        const fetchUrl =
+            method === 'Update'
+                ? `${daysService.url}/events/${event.id}`
+                : `${daysService.url}/events`;
+        const httpMethod = method === 'Update' ? 'PATCH' : 'POST';
+
+        fetch(fetchUrl, {
+            method: httpMethod,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(event),
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                console.log(res);
+                setEvents((prevState) => [...prevState, res]);
+                cancelButtonHandler();
+                // if (method === 'Update') {
+                //     setEvents((prevState) =>
+                //         prevState.map((eventEl) =>
+                //             eventEl.id === res.id ? res : eventEl,
+                //         ),
+                //     );
+                // } else {
+                //     setEvents((prevState) => [...prevState, res]);
+                // }
+                // cancelButtonHandler();
+            });
+    };
+
     return (
         <>
             {isShowForm ? (
                 <FormPositionWrapper onClick={cancelButtonHandler}>
                     <FormWrapper onClick={(e) => e.stopPropagation()}>
-                        <EventTitle value={event.title} onChange={(e) => changeEventHandler(e.target.value, 'title')}/>
-                        <EventBody value={event.description} onChange={(e) => changeEventHandler(e.target.value, 'description')}/>
+                        <EventTitle
+                            value={event.title}
+                            onChange={(e) =>
+                                changeEventHandler(e.target.value, 'title')
+                            }
+                        />
+                        <EventBody
+                            value={event.description}
+                            onChange={(e) =>
+                                changeEventHandler(
+                                    e.target.value,
+                                    'description',
+                                )
+                            }
+                        />
                         <ButtonsWrapper>
                             <button onClick={cancelButtonHandler}>
                                 Cancel
                             </button>
-                            <button>{method}</button>
+                            <button onClick={eventFetchHandler}>
+                                {method}
+                            </button>
                         </ButtonsWrapper>
                     </FormWrapper>
                 </FormPositionWrapper>
