@@ -66,12 +66,20 @@ const ButtonsWrapper = styled('div')`
     justify-content: flex-end;
 `;
 
+const defaultEvent = {
+    title: '',
+    description: '',
+    date: moment().format('X')
+};
+  
+
 export default function App() {
     const daysService = new DaysService();
 
     const [events, setEvents] = useState([]);
     const [event, setEvent] = useState(Object.create({}));
-    const [isShowForm, setShowForm] = useState(true);
+    const [isShowForm, setShowForm] = useState(false);
+    const [method, setMethod] = useState('');
     //const [today, setToday] = useState(daysService.getCurrentDay());
     const [today, setToday] = useState(moment());
 
@@ -106,10 +114,11 @@ export default function App() {
         setToday((prev) => prev.clone().add(1, 'month'));
     };
 
-    const openFormHandler = (method: string, eventForUpdate = 'Create') => {
-        console.log(`Someone clicked`, method);
-        setEvent(eventForUpdate);
+    const openFormHandler = (methodName: string, eventForUpdate = 'Create') => {
+        console.log(`Someone clicked`, methodName);
+        setEvent(eventForUpdate || defaultEvent);
         setShowForm(true);
+        setMethod(methodName);
     };
 
     const cancelButtonHandler = () => {
@@ -117,16 +126,25 @@ export default function App() {
         setEvent(null);
     };
 
+    const changeEventHandler = (text, field) => {
+        setEvent((prevState) => ({
+            ...prevState,
+            [field]: text,
+        }));
+    };
+
     return (
         <>
             {isShowForm ? (
                 <FormPositionWrapper onClick={cancelButtonHandler}>
                     <FormWrapper onClick={(e) => e.stopPropagation()}>
-                        <EventTitle value={event.title}/>
-                        <EventBody value={event.description}/>
+                        <EventTitle value={event.title} onChange={(e) => changeEventHandler(e.target.value, 'title')}/>
+                        <EventBody value={event.description} onChange={(e) => changeEventHandler(e.target.value, 'description')}/>
                         <ButtonsWrapper>
-                            <button onClick={cancelButtonHandler}>Cancel</button>
-                            <button>+</button>
+                            <button onClick={cancelButtonHandler}>
+                                Cancel
+                            </button>
+                            <button>{method}</button>
                         </ButtonsWrapper>
                     </FormWrapper>
                 </FormPositionWrapper>
