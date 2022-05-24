@@ -7,10 +7,12 @@ export default function CalendarGrid({
     startDay,
     today,
     events,
+    openFormHandler,
 }: {
     startDay: moment.Moment;
     today: moment.Moment;
     events: Array<any>;
+    openFormHandler: (method: string, event: any) => void;
 }) {
     const daysService = new DaysService();
 
@@ -34,7 +36,7 @@ export default function CalendarGrid({
             {/* Day aliases*/}
             <GridWrapper isHeader>
                 {[...Array(7)].map((_, i) => (
-                    <CellWrapper isHeader isSelectedMonth>
+                    <CellWrapper isHeader isSelectedMonth key={i}>
                         <RowInCell justifyContent={'flex-end'} pr={1}>
                             {daysService.getDayAliasByDayNumber(i + 1)}
                         </RowInCell>
@@ -55,7 +57,7 @@ export default function CalendarGrid({
                     >
                         <RowInCell justifyContent={'flex-end'}>
                             <ShowDayWrapper>
-                                <DayWrapper>
+                                <DayWrapper onClick={() => openFormHandler('Create', 'Create')}>
                                     {daysService.isCurrentDay(day) ? (
                                         <CurrentDay>
                                             <div>{day.format('D')}</div>
@@ -79,7 +81,7 @@ export default function CalendarGrid({
                                     )
                                     .map((event) => (
                                         <li key={event.id}>
-                                            <EventItemWrapper>
+                                            <EventItemWrapper onClick={() => openFormHandler('Update', event)}>
                                                 {event.title}
                                             </EventItemWrapper>
                                         </li>
