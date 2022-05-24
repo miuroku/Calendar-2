@@ -8,6 +8,7 @@ export class DaysService {
         // moment.updateLocale('en', { week: { dow: 1 } });
     }
 
+    public url = 'http://localhost:5000';
     public maxDaysOnPage = 41;
     public numbersOfWeekends = [6, 0];
 
@@ -36,6 +37,10 @@ export class DaysService {
 
     public getDayAliasByDayNumber = (dayNumber: number) => {
         return moment().day(dayNumber).format('ddd');
+    };
+
+    public isSelectedMonth = (day: moment.Moment, monthDay=moment()) => {
+        return monthDay.isSame(day, 'month');
     };
 
     // Get the range of days in month for some day.

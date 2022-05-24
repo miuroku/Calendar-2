@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import './App.css';
 import Header from '../Header/Header';
 import Monitor from '../Monitor/Monitor';
@@ -8,11 +8,28 @@ import styled from 'styled-components';
 import moment from 'moment';
 
 export default function App() {
+
+    const [events, setEvents] = useState([]);
+
     const daysService = new DaysService();
 
     const [today, setToday] = useState(daysService.getCurrentDay());
 
-    //const startDay = daysService.getStartMonthDay();
+    const startDay = today.clone().startOf('month').startOf('week');
+
+    const startDayQuery = daysService.getStartMonthDay(startDay).format('X');
+    const endDayQuery = daysService.getEndMonthDay(startDay).format('X');
+
+    useEffect(() => {
+        fetch(`${daysService.url}/events?date_gte=${startDayQuery}&date_lte=${endDayQuery}`)
+            .then((res) => res.json())
+            .then((res) => {
+                setEvents(res);
+                console.log(`Result `, res);
+                console.log(`Star : ${startDayQuery}`);
+                console.log(`End : ${endDayQuery}`);
+            });
+    }, [today]);    
 
     const prevHandler = () => {
         setToday((prev) => prev.clone().subtract(1, 'month'));
@@ -35,7 +52,7 @@ export default function App() {
                 todayHandler={todayHandler}
                 nextHandler={nextHandler}
             />
-            <CalendarGrid startDay={today} />
+            <CalendarGrid startDay={today} today={today} events={events}/>
         </ShadowWrapper>
     );
 }
